@@ -1,4 +1,5 @@
 import Categoria from "../models/Categoria.js";
+import Produto from "../models/Produto.js";
 
  const CategoriaController = {
   create: async (req, res) => {
@@ -12,7 +13,12 @@ import Categoria from "../models/Categoria.js";
   findAll: async (req, res) => { 
     try
     {
-      const categorias = await Categoria.findAll();
+      const categorias = await Categoria.findAll({
+        include: {
+          model : Produto,
+          as : 'produtos'
+        }
+      });
       if (categorias.length === 0) {
         throw new Error('Nenhuma categoria encontrada');
       }
@@ -24,7 +30,12 @@ import Categoria from "../models/Categoria.js";
 
   findById: async (req, res) => { 
     try{
-        const categoria = await Categoria.findByPk(req.params.id);
+        const categoria = await Categoria.findByPk(req.params.id, {
+          include: {
+            model: Produto,
+            as: 'produtos'
+          }
+        });
         if (categoria) {
           res.status(200).json(categoria);
         } else {
@@ -36,10 +47,22 @@ import Categoria from "../models/Categoria.js";
    },
   update: async (req, res) => {
     try{
-        const categoria = await Categoria.findByPk(req.params.id);
+        const categoria = await Categoria.findByPk(req.params.id, {
+          include: {
+            model: Produto,
+            as: 'produtos'
+          }
+        });
         if (categoria) {
           await categoria.update(req.body);
-          res.status(200).json(categoria);
+
+          const categoriaAtualizada = await Categoria.findByPk(req.params.id, {
+            include: {
+              model: Produto,
+              as: 'produtos'
+            }
+          });
+          res.status(200).json(categoriaAtualizada);
         } else {
           res.status(404).json({ error: 'Categoria nao encontrada' });
         }
@@ -62,7 +85,13 @@ import Categoria from "../models/Categoria.js";
   },
   restaure : async (req,res) =>{
     try{
-        const categoria = await Categoria.findByPk(req.params.id, {paranoid : false});
+        const categoria = await Categoria.findByPk(req.params.id, {
+          paranoid : false,
+          include: {
+            model: Produto,
+            as: 'produtos',
+          }
+        });
         if (categoria){
             await categoria.restore();
             res.status(200).json({ message: 'Categoria restaurada com sucesso' });
