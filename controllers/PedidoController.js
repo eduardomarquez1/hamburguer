@@ -1,4 +1,7 @@
 import Pedido from "../models/Pedido.js";
+import Avaliacao from "../models/Avaliacao.js";
+import Entrega from "../models/Entrega.js";
+
 
 const PedidoController = {
     create : async (req, res) =>{
@@ -12,7 +15,12 @@ const PedidoController = {
 
     findAll : async (req,res) =>{
         try{
-            const pedidos = await Pedido.findAll();
+            const pedidos = await Pedido.findAll({
+                include: [
+                    { model: Avaliacao, as: 'avaliacao' },
+                    { model: Entrega, as: 'entrega' }
+                ]
+            });
             if (pedidos.length === 0){
                 throw new Error("Não há pedidos");
             }
