@@ -5,7 +5,7 @@ export default class Avaliacao extends Model {
     static associate (models){
         Avaliacao.belongsTo(models.Pedido,{
             foreignKey: 'pedido_id',
-            as: 'pedidos'
+            as: 'pedido'
         })
     }
 }
@@ -24,7 +24,6 @@ Avaliacao.init(
         nota: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            unique: true,
             validate: {
                 min: 1,
                 max: 5,
@@ -35,7 +34,7 @@ Avaliacao.init(
         sequelize,
         modelName: 'Avaliacao',
         tableName: 'avaliacoes',
-        timestamps: false,
+        timestamps: true,
         paranoid: true,    // ativa soft delete
     }
 );

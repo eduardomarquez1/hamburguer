@@ -33,8 +33,9 @@ Pedido.init({
         type: DataTypes.STRING,
         allowNull : false
     }
-}, sequelize,
+}, 
 {
+    sequelize,
     tableName : 'pedidos',
     timestamps : true, // criar os campos deleteAt e updatedAt
     paranoid : true
