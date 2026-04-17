@@ -9,7 +9,7 @@ export default class Pedido extends Model{
         })
         Pedido.hasOne(models.Avaliacao, {
             foreignKey: 'pedido_id',
-            as: 'avaliacoes'
+            as: 'avaliacao'
         })
     }
 };
